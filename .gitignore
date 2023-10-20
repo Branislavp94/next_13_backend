@@ -1,0 +1,16 @@
+# Node
+/node_modules
+
+# Prod
+/dist
+*.tsbuildinfo
+
+# Environment Variables
+.env
+.env.*
+
+# Files
+uploads
+avatars
+card-avatars
+error.log
