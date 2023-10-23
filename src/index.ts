@@ -1,6 +1,9 @@
+/* eslint-disable implicit-arrow-linebreak */
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import bodyParser from 'body-parser';
+import auth from './routes/auth';
 
 // Initialize Express
 const app = express();
@@ -11,7 +14,13 @@ const PORT = process.env.PORT || 5000;
 // Secure HTTP headers
 app.use(helmet());
 
+// parse application/json
+app.use(bodyParser.json());
 
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+
+console.log(process.env.CLIENT_APP_DOMAIN);
 // Configure CORS policy
 const whitelist = [
   process.env.CLIENT_APP_DOMAIN,
@@ -33,6 +42,9 @@ const corsMiddlewareOptions = {
   },
 };
 
+// Enable pre-flight request for form-data requests
+app.options('*', cors()); // include before other routes
+
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   next();
@@ -40,19 +52,11 @@ app.use((req, res, next) => {
 
 app.use(cors(corsMiddlewareOptions));
 
-// Enable pre-flight request for form-data requests
-app.options('*', cors()); // include before other routes
-
-
-// Parse JSON requet body
-app.use(express.json({ limit: '100000mb' }));
-app.use(express.urlencoded({ extended: false, limit: '100000mb' }));
-
+// routes
+app.use('/api/auth', auth);
 
 // Start the server
 // eslint-disable-next-line no-console
 app.listen(PORT, () =>
   // eslint-disable-next-line no-console
-  console.log(`Server started and listeningg on ${PORT}`)
-);
-
+  console.log(`Server started and listeningg on ${PORT}`));
