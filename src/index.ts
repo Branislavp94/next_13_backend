@@ -1,9 +1,12 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable implicit-arrow-linebreak */
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import auth from './routes/auth';
+import user from './routes/user';
 
 // Initialize Express
 const app = express();
@@ -20,7 +23,9 @@ app.use(bodyParser.json());
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 
-console.log(process.env.CLIENT_APP_DOMAIN);
+// load the cookie-parsing middleware
+app.use(cookieParser());
+
 // Configure CORS policy
 const whitelist = [
   process.env.CLIENT_APP_DOMAIN,
@@ -54,6 +59,7 @@ app.use(cors(corsMiddlewareOptions));
 
 // routes
 app.use('/api/auth', auth);
+app.use('/api/user', user);
 
 // Start the server
 // eslint-disable-next-line no-console
