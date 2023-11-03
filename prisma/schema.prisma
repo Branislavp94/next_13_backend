@@ -14,7 +14,7 @@ model User {
   email    String  @unique
   password String
   role     Role    @default(USER)
-  token    String?
+  image    String  @default("")
 }
 
 enum Role {

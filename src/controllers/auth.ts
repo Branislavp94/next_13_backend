@@ -40,3 +40,37 @@ export const registration = async (req) => {
     };
   }
 };
+
+export const registerUserProviders = async (req) => {
+  try {
+    const { username, email, image } = req.body;
+
+    const existUser = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (!existUser) {
+      await prisma.user.create({
+        data: {
+          username,
+          email,
+          password: '',
+          image: image || '',
+        },
+      });
+    }
+
+    return {
+      success: true,
+      status: 'success',
+    };
+  } catch (e: any) {
+    return {
+      success: false,
+      status: 'failed',
+      message: 'Server Error',
+    };
+  }
+};
